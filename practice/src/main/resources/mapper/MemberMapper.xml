@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- <mapper namespace="com.ysj.practice.board.BoardMapper"> -->
+<mapper namespace="com.example.practice.member.MemberMapper">
+ 
+	<!-- 회원 insert문 -->
+    <insert id="insertMember" parameterType="memberdto">
+    INSERT INTO member 
+    	(user_type, name, email, password, birth) 
+    VALUES
+    	(#{userType}, #{name}, #{email}, #{password}, #{birth});
+    </insert>
+    
+    
+    
+	<!-- 로그인 처리 쿼리문 -->
+    <select id="findMember" parameterType="memberdto" resultType="memberdto">
+    	SELECT *
+    	FROM member
+    	WHERE email = #{email}
+    </select>
+    
+    <!-- 아이디 중복 체크 -->
+    <select id="findMemberByEmail" parameterType="memberdto" resultType="memberdto">
+    	SELECT * 
+    	FROM member
+    	WHERE email = #{email}
+    	LIMIT 1
+    </select>
+    
+	<!--    updateMember-->
+	<update id="updateMember" parameterType="memberdto">
+	UPDATE member
+	<set>
+		<if test="name != null">
+		name = #{name},
+		</if>
+		<if test="password != null">
+		password = #{password},
+		</if>
+	</set>
+	WHERE email =#{email}
+	
+	</update>
+    
+<!--	void deleteMember(String email);-->
+	<delete id="deleteMember" parameterType="String">
+	DELETE FROM member WHERE email = #{email}
+	</delete>
+
+    
+</mapper>
+
+
