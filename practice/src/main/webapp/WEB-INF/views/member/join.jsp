@@ -34,6 +34,7 @@ language="java" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
 
       input[type="text"],
       input[type="email"],
+      input[type="password"],
       input[type="date"] {
         width: 100%;
         padding: 8px;
@@ -105,34 +106,93 @@ language="java" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
           <label>사업자 등록번호<input type="text" name="bizNo" /></label>
           <label>회사명<input type="text" name="companyName" /></label>
         </div>
-
+		
+		<!-- 사용자 주소 입력 필드 -->
+		<div>
+		  <label>주소<input type="text" id="address" name="address" readonly/></label>
+		  </br>
+		<button type="button" id="AddressPopUp">주소검색</button>
+		<div id="map" style="width:300px;height:300px;margin-top:10px;"></div>
+		</div>
+		
+		<!-- 좌표 저장용 -->
+		<intput type="hidden" id="lat" name="lat">
+		<intput type="hidden" id="lng" name="lng">
+		
+		</br>
+		
         <button type="submit" class="submit-btn">가입하기</button>
       </form>
 	
     </div>
-
+	
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b0a28ac306bcd212e1f400b0ea32cf6&libraries=services"></script>
+	<!-- 다음 주소 API 스크립트 페이지 -->
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
-      function preventSubmitEvent(e) {
-        e.preventDefault(); // 실제 제출 막기
-        alert("회원가입이 되었습니다.");
-      }
-<!--      $("#joinForm").submit(preventSubmitEvent); // 폼에서 submit 막기-->
 
-      function toggleFields() {
-        let checkedValue = $("input[name='userType']:checked").val();
-        if (checkedValue === "normal") {
-          $(".user-fields").show();
-          $(".business-fields").hide();
-        } else if (checkedValue === "business") {
-          $(".business-fields").show();
-          $(".user-fields").hide();
-        }
-      }
-
-      $("input[name='userType']").change(toggleFields);
 
       // 초기 상태 반영
-      $(document).ready(toggleFields);
+      $(document).ready(function () {
+		
+		var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+		var options = { //지도를 생성할 때 필요한 기본 옵션
+			center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+			level: 3 //지도의 레벨(확대, 축소 정도)
+		};
+
+		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+		
+		// marker 생성
+		var marker = new kakao.maps.Marker({
+		    map: map,
+		    position: new kakao.maps.LatLng(33.450701, 126.570667)
+		});
+		
+		
+		<!-- ////////////////////////////////////////////////////////////// -->
+		
+		let geocoder = new kakao.maps.services.Geocoder();
+
+
+		geocoder.addressSearch('대전 유성구 테크노1로 11-3', function(result, status) {
+		    if (status === kakao.maps.services.Status.OK) {
+				
+		        $("#lat").val(result[0].y);
+		        $("#lng").val(result[0].x);
+				
+				
+		    }
+		});
+		
+		
+		<!-- ////////////////////////////////////////////////////////////// -->
+		$("#AddressPopUp").click(function(){
+		new daum.Postcode({
+		        oncomplete: function(data) {
+					//condole.log(data.address);
+		         $("#address").val(data.address)
+		        }
+		    }).open();
+			
+		});
+		
+		
+		<!-- ////////////////////////////////////////////////////////////// -->
+		function toggleFields() {
+		  let checkedValue = $("input[name='userType']:checked").val();
+		  if (checkedValue === "normal") {
+		    $(".user-fields").show();
+		    $(".business-fields").hide();
+		  } else if (checkedValue === "business") {
+		    $(".business-fields").show();
+		    $(".user-fields").hide();
+		  }
+		}
+
+		$("input[name='userType']").change(toggleFields);
+		
+	   });
     </script>
   </body>
 </html>
