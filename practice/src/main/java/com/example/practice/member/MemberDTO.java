@@ -14,13 +14,17 @@ public class MemberDTO {
 	private String companyName; // 회사 이름 (사업자인 경우)
 	private Timestamp createdAt; // 가입일자 (등록일)
 
+	private String address; // 회사 이름 (사업자인 경우)
+	private double lat; // 위도
+	private double lng; // 위도
+
 	// 기본 생성자
 	public MemberDTO() {
 	}
 
 	// 모든 필드를 포함한 생성자
 	public MemberDTO(int idx, String userType, String name, String email, String password, Date birth, String bizNo,
-			String companyName, Timestamp createdAt) {
+			String companyName, Timestamp createdAt, String address, double lat, double lng) {
 		this.idx = idx;
 		this.userType = userType;
 		this.name = name;
@@ -30,6 +34,34 @@ public class MemberDTO {
 		this.bizNo = bizNo;
 		this.companyName = companyName;
 		this.createdAt = createdAt;
+		this.address = address;
+		this.lat = lat;
+		this.lng = lng;
+
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
 	}
 
 	// Getter & Setter
@@ -105,11 +137,13 @@ public class MemberDTO {
 		this.createdAt = createdAt;
 	}
 
-	// toString
 	@Override
 	public String toString() {
-		return "MemberDTO{" + "idx=" + idx + ", userType='" + userType + '\'' + ", name='" + name + '\'' + ", email='"
-				+ email + '\'' + ", password='" + password + '\'' + ", birth=" + birth + ", bizNo='" + bizNo + '\''
-				+ ", companyName='" + companyName + '\'' + ", createdAt=" + createdAt + '}';
+		return "MemberDTO [idx=" + idx + ", userType=" + userType + ", name=" + name + ", email=" + email
+				+ ", password=" + password + ", birth=" + birth + ", bizNo=" + bizNo + ", companyName=" + companyName
+				+ ", createdAt=" + createdAt + ", address=" + address + ", lat=" + lat + ", lng=" + lng + "]";
 	}
+
+	// toString
+
 }

@@ -59,6 +59,9 @@ public class MemberService {
 	public void updateMember(MemberDTO memberDTO) {
 		String name = memberDTO.getName();
 		String password = memberDTO.getPassword();
+		String address = memberDTO.getAddress();
+		double lat = memberDTO.getLat();
+		double lng = memberDTO.getLng();
 		// 빈값 검증 if문
 		// 이름 검증
 		if (name.isEmpty()) {
@@ -71,6 +74,15 @@ public class MemberService {
 
 			String encryptedPw = passwordEncoder.encode(memberDTO.getPassword());
 			memberDTO.setPassword(encryptedPw);
+		}
+
+		if (address.isEmpty()) {
+			memberDTO.setAddress(null);
+		}
+
+		if (lat == 0 || lng == 0) {
+			memberDTO.setLat(0);
+			memberDTO.setLng(0);
 		}
 
 		memberMapper.updateMember(memberDTO);

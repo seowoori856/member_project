@@ -109,18 +109,18 @@ language="java" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
 		
 		<!-- 사용자 주소 입력 필드 -->
 		<div>
-		  <label>주소<input type="text" id="address" name="address" readonly/></label>
+		  <label>주소<input type="text" id="address" name="address" readonl requiredy/></label>
 		  </br>
 		<button type="button" id="AddressPopUp">주소검색</button>
-		<div id="map" style="width:300px;height:300px;margin-top:10px;"></div>
+		<div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
 		</div>
 		
 		<!-- 좌표 저장용 -->
-		<intput type="hidden" id="lat" name="lat">
-		<intput type="hidden" id="lng" name="lng">
+		<input type="hidden" id="lat" name="lat">
+		<input type="hidden" id="lng" name="lng">
 		
 		</br>
-		
+		 
         <button type="submit" class="submit-btn">가입하기</button>
       </form>
 	
@@ -135,47 +135,53 @@ language="java" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
       // 초기 상태 반영
       $(document).ready(function () {
 		
-		var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-		var options = { //지도를 생성할 때 필요한 기본 옵션
-			center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-			level: 3 //지도의 레벨(확대, 축소 정도)
-		};
-
-		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-		
-		// marker 생성
-		var marker = new kakao.maps.Marker({
-		    map: map,
-		    position: new kakao.maps.LatLng(33.450701, 126.570667)
-		});
-		
-		
-		<!-- ////////////////////////////////////////////////////////////// -->
-		
-		let geocoder = new kakao.maps.services.Geocoder();
-
-
-		geocoder.addressSearch('대전 유성구 테크노1로 11-3', function(result, status) {
-		    if (status === kakao.maps.services.Status.OK) {
-				
-		        $("#lat").val(result[0].y);
-		        $("#lng").val(result[0].x);
-				
-				
-		    }
-		});
-		
-		
-		<!-- ////////////////////////////////////////////////////////////// -->
+		// 주소 검색 버튼을 클릭 시 다음 주소 팝업창과 지도를 생성
 		$("#AddressPopUp").click(function(){
-		new daum.Postcode({
+			new daum.Postcode({
 		        oncomplete: function(data) {
 					//condole.log(data.address);
 		         $("#address").val(data.address)
+				 
+				 createMap(data.address);
+
 		        }
 		    }).open();
 			
 		});
+		
+		
+		// 지도를 생성하는 함수
+		function createMap(address){
+			// 주소를 좌표로 변경하는 객체
+			let geocoder = new kakao.maps.services.Geocoder();
+			
+			// 주소를 좌표 변경 함수
+			geocoder.addressSearch(address, function(result, status) {
+			     if (status === kakao.maps.services.Status.OK) {
+					$("#map").show();
+					console.log(result);
+			 		 //위도 경도 값 설정
+			         $("#lat").val(result[0].y);
+			         $("#lng").val(result[0].x);
+					 
+					 let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+					 
+					 let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+					 let options = { //지도를 생성할 때 필요한 기본 옵션
+					 	center: coords, //지도의 중심좌표.
+					 	level: 3 //지도의 레벨(확대, 축소 정도)
+					 };
+	
+					 let map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+					 
+					 let marker = new kakao.maps.Marker({
+					     map: map,
+					     position: coords
+					 });
+			     }
+			 });
+			
+		} 
 		
 		
 		<!-- ////////////////////////////////////////////////////////////// -->

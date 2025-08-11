@@ -9,9 +9,9 @@
 	<!-- 회원 insert문 -->
     <insert id="insertMember" parameterType="memberdto">
     INSERT INTO member 
-    	(user_type, name, email, password, birth) 
+    	(user_type, name, email, password, birth, address, lat, lng) 
     VALUES
-    	(#{userType}, #{name}, #{email}, #{password}, #{birth});
+    	(#{userType}, #{name}, #{email}, #{password}, #{birth}, #{address}, #{lat}, #{lng});
     </insert>
     
     
@@ -41,6 +41,14 @@
 		<if test="password != null">
 		password = #{password},
 		</if>
+		<if test="address != null">
+		address = #{address},
+		</if>
+		<if test="lat != 0 and lng != 0">
+		lat = #{lat},
+		lng = #{lng},
+		</if>
+		
 	</set>
 	WHERE email =#{email}
 	

@@ -81,62 +81,9 @@
 		<a href="/member/edit">수정하기</a><br>
 		<a href="/member/delete">회원정보삭제</a><br>
 		
-		<button id="deleteBtn" type="button" class="btn-login">회원정보삭제</button>
       </div>
     </div>
-	<script>
-	$(document).ready(function() {
-	    function deleteFunc() {
-	       let emailValue = $("#email1").data("email2");
-		   
-		   //데이터 형식 생성 
-		   let dataForm = { email3:emailValue};
-		   
-		   //비동기 요청 방식 ajax
-		   $.ajax({
-			url:"/member/delete", //<-- 요청하는 주소
-			method:"post", 		  //<--요청하는 방법
-			data: dataForm,		  //<-- 보내는 데이터 형식 
-			success:function(response){
-				alert("통신성공");
-			}, // <-- 통신이 성공했을때
-			error:function(){
-				alert("통신실패ㄴㄴㄴ");
-			},			  // <-- 통신이 실패했을
-		   });
-		   
-		   
-		   
-		   
-		   
-		   
-		   
-		   
-		   //console.log(emailValue);
-		   //서버 통신 방법은 달라도 보내는 데이터 형식은 같다
-<!--		   let dataForm = { email:emailValue};-->
-		   
-<!--		   $.ajax({-->
-<!--			url:"/member/delete",-->
-<!--			method:"POST",-->
-<!--			data: dataForm,-->
-<!--			success:function(response){-->
-<!--				console.log(response);-->
-<!--				if(response === "success"){-->
-<!--					alert("회원 정보가 삭제 되었습니다.");-->
-<!--					location.href = "/member/login";// <a태그>-->
-<!--				}-->
-<!--			},-->
-<!--			error:function(){-->
-<!--				alert("서버 통신 실패");-->
-<!--			}-->
-<!--		   });-->
-		   
-	    }
 
-	    $("#deleteBtn").click(deleteFunc);
-	});
-	</script>
 
   </body>
 </html>

@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +37,7 @@ public class MemberController {
 
 	@PostMapping("/insert") // /member/insert
 	public String insertMember(@ModelAttribute MemberDTO memberDto, RedirectAttributes redirectAttributes) {
+		System.out.println(memberDto.toString());
 		boolean result = memberService.insertMember(memberDto);
 
 		// result true 회원가입 성공 -> login페이지로 이동
@@ -132,27 +131,14 @@ public class MemberController {
 		return "redirect:/member/myPage";
 	}
 
-//	// 회원 정보 삭제
-//	@GetMapping("/delete")
-//	public String deleteMember2(HttpSession session) {
-//		MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
-//		memberService.deleteMember(loginMember);
-//
-//		session.invalidate();
-//		return "redirect:/member/login";
-//	}
+	// 회원 정보 삭제
+	@GetMapping("/delete")
+	public String deleteMember(HttpSession session) {
+		MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+		memberService.deleteMember(loginMember.getEmail());
 
-	// ajax 비동기 요청 처리 과정
-	@PostMapping("/delete")
-	@ResponseBody
-	public String deleteMember(@RequestParam("email3") String email, HttpSession session,
-			@ModelAttribute MemberDTO memberDTO) {
-		System.out.println("출력확인" + email);
-//		System.out.println(email);
-//		System.out.println(memberDTO.toString());
-//		memberService.deleteMember(email);
-//		session.invalidate(); // 세션에 남은 회원정보 삭제
-		return "success"; // 우선 성공했다.
+		session.invalidate();
+		return "redirect:/member/login";
 	}
 
 }
